@@ -1,7 +1,6 @@
 package org.example.observability.service;
 
 import io.micrometer.observation.annotation.Observed;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.slf4j.Slf4j;
 import org.example.observability.client.WeatherClient;
 import org.springframework.cache.annotation.Cacheable;

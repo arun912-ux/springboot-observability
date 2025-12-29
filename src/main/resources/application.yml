@@ -133,7 +133,7 @@ spring:
 
 
 weather:
-  apikey: 0c3c357cbb2ceacfc2544131a21c4cdd
+  apikey: ${OPEN_WEATHER_API_KEY:0c3c357cbb2ceacfc2544131a21c4cdd}
 
 
 
