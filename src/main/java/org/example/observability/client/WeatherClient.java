@@ -1,5 +1,6 @@
 package org.example.observability.client;
 
+import io.opentelemetry.api.trace.Span;
 import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,6 +26,7 @@ public class WeatherClient {
 
     @WithSpan(value = "WeatherClient.getWeather")
     public String getWeather(String city) {
+        Span.current().setAttribute("29-city", city);
         String response = webClient.get()
                 .uri(url -> url
                         .path("/data/2.5/weather")

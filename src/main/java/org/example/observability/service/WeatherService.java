@@ -1,6 +1,7 @@
 package org.example.observability.service;
 
 import io.micrometer.observation.annotation.Observed;
+import io.opentelemetry.api.trace.Span;
 import lombok.extern.slf4j.Slf4j;
 import org.example.observability.client.WeatherClient;
 import org.springframework.cache.annotation.Cacheable;
@@ -17,9 +18,10 @@ public class WeatherService {
     }
 
     @Cacheable(value = "city-weather", key = "#city")
-//    @Observed(name = "weather-service.get-weather-for-city")
+    @Observed(name = "weather-service.get-weather-for-city")
     public String getWeatherForCity(String city) {
         log.info("Getting weather for city {}", city);
+        Span.current().setAttribute("24-city", city);
         String weather = weatherClient.getWeather(city);
         log.info("Weather for city {}", city);
         return weather;

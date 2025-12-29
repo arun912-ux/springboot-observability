@@ -1,9 +1,9 @@
 package org.example.observability.controller;
 
 import io.micrometer.observation.annotation.Observed;
+import io.opentelemetry.api.trace.Span;
 import lombok.extern.slf4j.Slf4j;
 import org.example.observability.service.WeatherService;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +36,8 @@ public class WebController {
     @GetMapping("weather")
     public ResponseEntity<?> getWeather(@RequestParam String city) {
         log.info("Got request to get weather for city {}", city);
+
+        Span.current().setAttribute("42-city", city);
         String weatherResponse = weatherService.getWeatherForCity(city);
         log.info("Weather response for city {} : {}", city, weatherResponse);
         return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(weatherResponse);
