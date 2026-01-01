@@ -12,4 +12,9 @@ public class SpringObservabilityApplication {
         SpringApplication.run(SpringObservabilityApplication.class, args);
     }
 
+
+    // kafka listener -> db
+    // web -> kafka producer
+    // web -> web -> db
+
 }

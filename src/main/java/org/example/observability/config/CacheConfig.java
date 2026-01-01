@@ -3,9 +3,16 @@ package org.example.observability.config;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.serializer.Serializer;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
@@ -27,7 +34,9 @@ public class CacheConfig {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(10))
                 .enableTimeToIdle()
-                .disableCachingNullValues();
+                .disableCachingNullValues()
+                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
+                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer()));
     }
 
 //    @Bean
@@ -46,12 +55,18 @@ public class CacheConfig {
 //    }
 
 //    @Bean
-//    public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory connectionFactory) {
-//        RedisTemplate<Object, Object> template = new RedisTemplate<>();
-//        template.setConnectionFactory(connectionFactory);
-//        StringRedisTemplate stringRedisTemplate = new StringRedisTemplate();
-//        stringRedisTemplate.setConnectionFactory(connectionFactory);
-//        return stringRedisTemplate;
+//    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+//        RedisTemplate<Object, Object> redisTemplate = new RedisTemplate<>();
+//        redisTemplate.setConnectionFactory(connectionFactory);
+//
+////        GenericJackson2JsonRedisSerializer genericJackson2JsonRedisSerializer = new GenericJackson2JsonRedisSerializer();
+////        redisTemplate.setKeySerializer(genericJackson2JsonRedisSerializer);
+////        redisTemplate.setHashKeySerializer(genericJackson2JsonRedisSerializer);
+////        redisTemplate.setValueSerializer(genericJackson2JsonRedisSerializer);
+////        redisTemplate.setHashValueSerializer(genericJackson2JsonRedisSerializer);
+//
+//        return redisTemplate;
 //    }
+
 
 }

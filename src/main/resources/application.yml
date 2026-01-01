@@ -10,6 +10,10 @@ management:
     health:
       show-details: always
 
+  observations:
+    annotations:
+      enabled: true
+
   tracing:
     sampling:
       probability: 1.0
@@ -21,9 +25,6 @@ management:
       consume: W3C, B3, B3_MULTI
     enabled: true
 
-  observations:
-    annotations:
-      enabled: true
 
 
   otlp:
@@ -35,50 +36,7 @@ management:
         enabled: false
     tracing:
       export:
-        enabled: true
-
-#
-#  otlp:
-#    metrics:
-#      export:
-#        enabled: false
-#        url: http://192.168.1.93:4318/v1/metrics
-#
-#    tracing:
-#      endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/traces
-#      headers:
-#        Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
-#      transport: http
-#      export:
-#        enabled: true
-#
-#    logging:
-#      export:
-#        enabled: false
-#
-#
-#  observations:
-#    enable:
-#      all: true
-#
-#    annotations:
-#      enabled: true
-#
-#
-#  tracing:
-#    sampling:
-#      probability: 1.0
-#    opentelemetry:
-#      export:
-#        include-unsampled: true
-#    propagation:
-#      produce: W3C
-#      consume: W3C, B3, B3_MULTI
-#    enabled: true
-#
-#  logging:
-#    export:
-#      enabled: false
+        enabled: false
 
 
 
@@ -90,6 +48,7 @@ spring:
 
 
 
+# redis
   data:
     redis:
       host: 192.168.1.76
@@ -102,6 +61,19 @@ spring:
         enabled: false
 
 
+# postgres
+  datasource:
+    username: postgres
+    password: root123
+    url: "jdbc:postgresql://192.168.1.76:5432/pgdb"
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate      # for development, use 'validate' or 'none' for production
+    show-sql: true           # optional: shows SQL in logs
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    properties:
+      hibernate.format_sql: true
 
 
 
@@ -140,10 +112,22 @@ weather:
 otel:
   exporter:
     otlp:
+
       logs:
-        endpoint: http://192.168.1.93:4318/v1/logs
+        endpoint: http://192.168.1.93:4317/v1/logs
+        protocol: grpc
       metrics:
-        endpoint: http://192.168.1.93:4318/v1/metrics
+        endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/metrics  # https://prometheus-prod-43-prod-ap-south-1.grafana.net/api/prom/push
+        protocol: http/protobuf
+        headers:
+          Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
+#      metrics:
+#        endpoint: http://192.168.1.93:4318/v1/metrics
+#        protocol: http/protobuf
+#      traces:
+#        endpoint: http://192.168.1.93:4318/v1/traces
+#        protocol: http/protobuf
+#        timeout: 15000
       traces:
         endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/traces
         headers:
@@ -155,10 +139,14 @@ otel:
   traces:
     exporter: otlp
   metrics:
-    exporter: none
+    exporter: otlp
 
 
   propagators: tracecontext,baggage
 
 
 
+logging:
+  level:
+    io.opentelemetry: DEBUG
+    io.micrometer: DEBUG
