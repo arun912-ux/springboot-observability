@@ -2,6 +2,7 @@ package org.example.observability.service;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import io.micrometer.core.annotation.Timed;
 import io.micrometer.observation.annotation.Observed;
 import io.opentelemetry.api.trace.Span;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class WeatherService {
         this.pgDbRepository = pgDbRepository;
     }
 
+    @Timed(value = "weatherservice.getweather", histogram = true)
     @Transactional(propagation = Propagation.REQUIRED)
     @Cacheable(value = "city-weather", key = "#city")
     @Observed(name = "weather-service.get-weather-for-city")

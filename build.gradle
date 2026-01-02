@@ -53,10 +53,10 @@ dependencies {
 
     implementation 'io.micrometer:micrometer-tracing-bridge-otel'
     implementation 'io.micrometer:micrometer-registry-otlp'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
     implementation "io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter"
     implementation 'net.ttddyy.observation:datasource-micrometer-spring-boot:1.2.1'
-    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
 
 
     compileOnly 'org.projectlombok:lombok'

@@ -21,23 +21,39 @@ management:
       export:
         include-unsampled: true
     propagation:
-      produce: W3C
+      produce: W3C, b3, b3_multi, w3c
       consume: W3C, B3, B3_MULTI
     enabled: true
 
-
+  metrics:
+    data:
+      repository:
+        autotime:
+          percentiles-histogram: true
+    distribution:
+      percentiles-histogram:
+        all: true
+        http.server.requests: true
 
   otlp:
     metrics:
       export:
-        enabled: false
+        enabled: true
+#        protocol: http/protobuf
+        url: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/metrics
+        headers:
+          Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
+        step: 30s
+        aggregation-temporality: cumulative
+
+
+
     logging:
       export:
         enabled: false
     tracing:
       export:
         enabled: false
-
 
 
 
@@ -113,14 +129,27 @@ otel:
   exporter:
     otlp:
 
+#      logs:
+#        endpoint: http://192.168.1.93:4317/v1/logs
+#        protocol: grpc
       logs:
-        endpoint: http://192.168.1.93:4317/v1/logs
-        protocol: grpc
-      metrics:
-        endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/metrics  # https://prometheus-prod-43-prod-ap-south-1.grafana.net/api/prom/push
+        endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/logs
         protocol: http/protobuf
         headers:
           Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
+
+#      metrics:
+#        endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/metrics  # https://prometheus-prod-43-prod-ap-south-1.grafana.net/api/prom/push
+#        protocol: http/protobuf
+#        headers:
+#          Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
+#        temporality:
+#          preference: CUMULATIVE
+#        default:
+#          histogram:
+#            aggregation: EXPLICIT_BUCKET_HISTOGRAM
+
+
 #      metrics:
 #        endpoint: http://192.168.1.93:4318/v1/metrics
 #        protocol: http/protobuf
@@ -135,18 +164,18 @@ otel:
         protocol: http/protobuf
 
   logs:
-    exporter: none
+    exporter: otlp
   traces:
     exporter: otlp
   metrics:
-    exporter: otlp
+    exporter: none    # try this next
 
 
-  propagators: tracecontext,baggage
+  propagators: tracecontext,baggage,b3,b3multi,ottrace
 
 
 
-logging:
-  level:
-    io.opentelemetry: DEBUG
-    io.micrometer: DEBUG
+#logging:
+#  level:
+#    io.opentelemetry: DEBUG
+#    io.micrometer: DEBUG
