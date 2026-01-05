@@ -65,16 +65,13 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-jackson'
 
 //    testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-//    implementation 'com.google.code.gson:gson:2.13.2'
-    implementation 'org.springframework.boot:spring-boot-starter-gson'
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.1'
-    implementation 'org.springframework.boot:spring-boot-starter-jackson'
 
 }
 
