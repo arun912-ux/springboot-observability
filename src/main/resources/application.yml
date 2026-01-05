@@ -14,53 +14,87 @@ management:
     annotations:
       enabled: true
 
+
+
+
   tracing:
+    export:
+      enabled: true
+      otlp:
+        enabled: true
+    propagation:
+      consume: W3C, B3, B3_MULTI
+      produce: W3C, b3, b3_multi
     sampling:
       probability: 1.0
-    opentelemetry:
-      export:
-        include-unsampled: true
-    propagation:
-      produce: W3C, b3, b3_multi, w3c
-      consume: W3C, B3, B3_MULTI
-    enabled: true
+
 
   metrics:
-    data:
-      repository:
-        autotime:
-          percentiles-histogram: true
+    enable:
+      all: true
     distribution:
       percentiles-histogram:
         all: true
-        http.server.requests: true
+      percentiles:
+        all: 0.99, 0.95, 0.90, 0.75
+
+
+  logging:
+    export:
+      enabled: true
+      otlp:
+        enabled: true
+
+
+
+
+
+  opentelemetry:
+
+    logging:
+      export:
+        otlp:
+          transport: http
+          compression: none
+          endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/logs
+          headers:
+            Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
+
+
+    tracing:
+      export:
+        otlp:
+          transport: http
+          compression: gzip
+          endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/traces
+          headers:
+            Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
+        include-unsampled: true
+
+
 
   otlp:
     metrics:
       export:
         enabled: true
-#        protocol: http/protobuf
         url: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/metrics
         headers:
           Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
-        step: 30s
+        histogram-flavor: explicit-bucket-histogram
         aggregation-temporality: cumulative
 
 
 
-    logging:
-      export:
-        enabled: false
-    tracing:
-      export:
-        enabled: false
+
+
+
+
+
 
 
 
 
 spring:
-  reactor:
-    context-propagation: auto
 
 
 
@@ -125,57 +159,11 @@ weather:
 
 
 
-otel:
-  exporter:
-    otlp:
-
-#      logs:
-#        endpoint: http://192.168.1.93:4317/v1/logs
-#        protocol: grpc
-      logs:
-        endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/logs
-        protocol: http/protobuf
-        headers:
-          Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
-
-#      metrics:
-#        endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/metrics  # https://prometheus-prod-43-prod-ap-south-1.grafana.net/api/prom/push
-#        protocol: http/protobuf
-#        headers:
-#          Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
-#        temporality:
-#          preference: CUMULATIVE
-#        default:
-#          histogram:
-#            aggregation: EXPLICIT_BUCKET_HISTOGRAM
-
-
-#      metrics:
-#        endpoint: http://192.168.1.93:4318/v1/metrics
-#        protocol: http/protobuf
-#      traces:
-#        endpoint: http://192.168.1.93:4318/v1/traces
-#        protocol: http/protobuf
-#        timeout: 15000
-      traces:
-        endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/traces
-        headers:
-          Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
-        protocol: http/protobuf
-
-  logs:
-    exporter: otlp
-  traces:
-    exporter: otlp
-  metrics:
-    exporter: none    # try this next
-
-
-  propagators: tracecontext,baggage,b3,b3multi,ottrace
-
-
 
 #logging:
 #  level:
 #    io.opentelemetry: DEBUG
 #    io.micrometer: DEBUG
+
+
+

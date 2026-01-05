@@ -34,7 +34,7 @@ public class WebController {
     }
 
     @GetMapping("weather")
-    public ResponseEntity<?> getWeather(@RequestParam String city) {
+    public ResponseEntity<?> getWeather(@RequestParam(value = "city", required = true) String city) {
         log.info("Got request to get weather for city {}", city);
 
         Span.current().setAttribute("42-city", city);

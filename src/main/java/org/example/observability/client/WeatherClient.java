@@ -1,7 +1,7 @@
 package org.example.observability.client;
 
+import io.micrometer.tracing.annotation.NewSpan;
 import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.instrumentation.annotations.WithSpan;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -24,7 +24,7 @@ public class WeatherClient {
 
     // https://api.openweathermap.org/data/2.5/weather?q=city&appid=0c3c357cbb2ceacfc2544131a21c4cdd&units=metric
 
-    @WithSpan(value = "WeatherClient.getWeather")
+    @NewSpan(value = "WeatherClient.getWeather")
     public String getWeather(String city) {
         Span.current().setAttribute("29-city", city);
         String response = webClient.get()
