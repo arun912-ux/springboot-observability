@@ -30,11 +30,11 @@ repositories {
 }
 
 
-dependencyManagement {
-    imports {
-        mavenBom "io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:2.23.0"
-    }
-}
+//dependencyManagement {
+//    imports {
+//        mavenBom "io.opentelemetry.instrumentation:opentelemetry-instrumentation-bom:2.23.0"
+//    }
+//}
 
 dependencies {
 
@@ -52,10 +52,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     implementation 'net.ttddyy.observation:datasource-micrometer-spring-boot:2.0.1'
+    implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.23.0-alpha'
 
     // annotations - @WithSpan
 //    implementation "org.springframework.boot:spring-boot-starter-aop"
-
 //    implementation 'io.micrometer:micrometer-tracing-bridge-otel'
 //    implementation 'io.micrometer:micrometer-registry-otlp'
 //    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
@@ -67,7 +67,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-jackson'
 
-//    testImplementation 'io.projectreactor:reactor-test'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'

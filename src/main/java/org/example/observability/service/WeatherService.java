@@ -45,11 +45,11 @@ public class WeatherService {
         if (weather1 == null) {
             weather = weatherClient.getWeather(city);
             weatherEntity = mapToEntity(weather, city);
+            pgDbRepository.save(weatherEntity);
         } else {
             weatherEntity = weather1;
         }
         log.info("Weather for city {} : weather : {}", city, weatherEntity);
-        pgDbRepository.save(weatherEntity);
         return weatherEntity;
     }
 

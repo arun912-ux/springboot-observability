@@ -62,8 +62,9 @@ management:
       export:
         otlp:
           transport: http
-          compression: gzip
-          endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/logs
+          compression: none
+#          endpoint: https://otlp-gateway-prod-ap-south-1.grafana.net/otlp/v1/logs
+          endpoint: http://192.168.1.93:4318/v1/logs
           headers:
             Authorization: "Basic MTAyMDYxOTpnbGNfZXlKdklqb2lNVEl3TlRRMk1TSXNJbTRpT2lKemRHRmpheTB4TURJd05qRTVMVzkwYkhBdGQzSnBkR1V0YjNSc2NDMWpiMjV1WldOMGIzSWlMQ0pySWpvaVFVeEdTRkJOT1ZZMldUaGFPRGcwUVRNd2NFWTJPRVZFSWl3aWJTSTZleUp5SWpvaWNISnZaQzFoY0MxemIzVjBhQzB4SW4xOQ=="
 
