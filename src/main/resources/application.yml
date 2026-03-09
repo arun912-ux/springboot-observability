@@ -129,7 +129,7 @@ spring:
   datasource:
     username: postgres
     password: root123
-    url: "jdbc:postgresql://192.168.1.76:5432/pgdb"
+    url: 'jdbc:postgresql://192.168.1.76:5432/pgdb'
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -138,6 +138,12 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate.format_sql: true
+
+
+
+#  cache:
+#    type: caffeine
+
 
 
 
@@ -172,7 +178,6 @@ weather:
   apikey: ${OPEN_WEATHER_API_KEY:0c3c357cbb2ceacfc2544131a21c4cdd}
 
 
-
 logging:
   level:
     io.opentelemetry.exporter: DEBUG
@@ -181,3 +186,18 @@ logging:
 #  tomcat:
 #    relaxed-query-chars: "[,],{,},|"
 #    relaxed-path-chars: "[,],{,},|"
+
+
+server:
+  port: 8080
+
+
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      openWeatherMap:
+        failure-rate-threshold: 4
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+

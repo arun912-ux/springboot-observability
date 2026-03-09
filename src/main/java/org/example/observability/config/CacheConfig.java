@@ -1,23 +1,17 @@
 package org.example.observability.config;
 
-import org.example.observability.repository.WeatherEntity;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.support.CompositeCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.GenericJacksonJsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
-import tools.jackson.databind.JavaType;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.json.JsonMapper;
 
 import java.time.Duration;
 
@@ -27,6 +21,10 @@ public class CacheConfig {
     @Bean
     public CacheManager cacheManager(RedisCacheConfiguration redisCacheConfiguration,
                                      RedisConnectionFactory redisConnectionFactory) {
+        RedisCacheManager redisCacheManager = RedisCacheManager
+                .builder(redisConnectionFactory)
+                .cacheDefaults(redisCacheConfiguration)
+                .build();
         RedisCacheManager.RedisCacheManagerBuilder redisCacheManagerBuilder = RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(redisConnectionFactory)
                 .cacheDefaults(redisCacheConfiguration)
@@ -42,6 +40,29 @@ public class CacheConfig {
                 .disableCachingNullValues()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.json()));
+    }
+
+    private Caffeine<Object, Object> caffeine() {
+        return Caffeine.newBuilder()
+                .expireAfterWrite(Duration.ofSeconds(10))
+                .maximumSize(10)
+                .recordStats();
+    }
+
+    // Caffeine setup
+    @Bean
+    public CacheManager cacheManager1() {
+        CaffeineCacheManager manager = new CaffeineCacheManager();
+        manager.setCaffeine(caffeine());
+        return manager;
+    }
+
+    // Multiple Cache setup
+    @Bean
+    public CacheManager compositeCacheManager(@Qualifier("cacheManager") CacheManager redis, @Qualifier("cacheManager1") CacheManager caffeine) {
+        CompositeCacheManager compositeCacheManager = new CompositeCacheManager(redis, caffeine);
+        compositeCacheManager.setFallbackToNoOpCache(false);
+        return compositeCacheManager;
     }
 
 //    @Bean

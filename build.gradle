@@ -1,7 +1,10 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.1'
+    id 'org.springframework.boot' version '4.0.3'
     id 'io.spring.dependency-management' version '1.1.7'
+}
+ext {
+    springCloudVersion = "2025.1.0"
 }
 
 group = 'org.example'
@@ -45,14 +48,18 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
     runtimeOnly 'org.postgresql:postgresql'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.2.3'
+
 
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-    implementation 'net.ttddyy.observation:datasource-micrometer-spring-boot:2.0.1'
-    implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.23.0-alpha'
+    implementation 'net.ttddyy.observation:datasource-micrometer-spring-boot:2.1.1'
+    implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.25.0-alpha'
 
     // annotations - @WithSpan
 //    implementation "org.springframework.boot:spring-boot-starter-aop"
@@ -72,6 +79,11 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 
+}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
 }
 
 tasks.named('test') {

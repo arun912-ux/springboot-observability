@@ -34,7 +34,7 @@ public class WeatherService {
 
     @Timed(value = "weatherservice.getweather", histogram = true)
     @Transactional(propagation = Propagation.REQUIRED)
-    @Cacheable(value = "city-weather", key = "#city")
+    @Cacheable(value = "city-weather", key = "#city", cacheManager = "cacheManager")
     @Observed(name = "weather-service.get-weather-for-city")
     public WeatherEntity getWeatherForCity(String city) {
         log.info("Getting weather for city {}", city);
