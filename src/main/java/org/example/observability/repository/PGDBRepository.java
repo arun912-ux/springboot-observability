@@ -12,5 +12,5 @@ public interface PGDBRepository extends JpaRepository<WeatherEntity, String> {
     WeatherEntity save(WeatherEntity entity);
 
     @Observed(name = "PGDBRepository.findByCity")
-    Optional<List<WeatherEntity>> findByCityOrderByTimestampDesc(String city);
+    List<WeatherEntity> findByCityOrderByTimestampDesc(String city);
 }

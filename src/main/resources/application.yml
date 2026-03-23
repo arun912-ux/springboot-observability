@@ -115,22 +115,25 @@ spring:
 # redis
   data:
     redis:
-      host: 192.168.1.76
-      port: 6379
-      password: root123
+      host: valkey-aiven-256d391a-duoley-9bac.c.aivencloud.com
+      port: 24981
+      password: ${VALKEY_PASSWORD:AVNS_ICVlD_N8_jJ23duh0Ip}
       username: default
       client-type: lettuce
       database: 0
       ssl:
-        enabled: false
+        enabled: true
 
 
-# postgres
+
+  # postgres
   datasource:
-    username: postgres
-    password: root123
-    url: 'jdbc:postgresql://192.168.1.76:5432/pgdb'
+    username: avnadmin
+    password: AVNS__La1tM4jSbXtICSBYvs
+    url: 'jdbc:postgresql://pg-aiven-35baaf7f-duoley-9bac.c.aivencloud.com:24980/defaultdb?sslmode=require'
     driver-class-name: org.postgresql.Driver
+
+
   jpa:
     hibernate:
       ddl-auto: validate      # for development, use 'validate' or 'none' for production

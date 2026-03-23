@@ -7,6 +7,7 @@ import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.cache.support.CompositeCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -18,6 +19,7 @@ import java.time.Duration;
 @Configuration
 public class CacheConfig {
 
+    @Primary
     @Bean
     public CacheManager cacheManager(RedisCacheConfiguration redisCacheConfiguration,
                                      RedisConnectionFactory redisConnectionFactory) {
@@ -51,7 +53,7 @@ public class CacheConfig {
 
     // Caffeine setup
     @Bean
-    public CacheManager cacheManager1() {
+    public CacheManager caffeineCacheManager() {
         CaffeineCacheManager manager = new CaffeineCacheManager();
         manager.setCaffeine(caffeine());
         return manager;
@@ -59,7 +61,7 @@ public class CacheConfig {
 
     // Multiple Cache setup
     @Bean
-    public CacheManager compositeCacheManager(@Qualifier("cacheManager") CacheManager redis, @Qualifier("cacheManager1") CacheManager caffeine) {
+    public CacheManager compositeCacheManager(@Qualifier("cacheManager") CacheManager redis, @Qualifier("caffeineCacheManager") CacheManager caffeine) {
         CompositeCacheManager compositeCacheManager = new CompositeCacheManager(redis, caffeine);
         compositeCacheManager.setFallbackToNoOpCache(false);
         return compositeCacheManager;

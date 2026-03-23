@@ -16,6 +16,7 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Slf4j
@@ -39,15 +40,15 @@ public class WeatherService {
     public WeatherEntity getWeatherForCity(String city) {
         log.info("Getting weather for city {}", city);
         Span.current().setAttribute("24-city", city);
-        WeatherEntity weather1 = pgDbRepository.findByCityOrderByTimestampDesc(city).orElseThrow().get(0);
+        List<WeatherEntity> weather1 = pgDbRepository.findByCityOrderByTimestampDesc(city);
         String weather;
         WeatherEntity weatherEntity;
-        if (weather1 == null) {
+        if (weather1 == null || weather1.isEmpty()) {
             weather = weatherClient.getWeather(city);
             weatherEntity = mapToEntity(weather, city);
             pgDbRepository.save(weatherEntity);
         } else {
-            weatherEntity = weather1;
+            weatherEntity = weather1.get(0);
         }
         log.info("Weather for city {} : weather : {}", city, weatherEntity);
         return weatherEntity;
