@@ -19,7 +19,9 @@ java {
 
 jar.enabled = false
 bootJar {
-    archiveFileName = "${project.group}-${project.name}-${project.version}.jar"
+//    archiveFileName = "${project.group}-${project.name}-${project.version}.jar"
+    archiveBaseName = "${project.name}"
+    archiveVersion = "${project.version}"
 }
 
 configurations {
@@ -43,6 +45,7 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.springframework.boot:spring-boot-starter-webclient'
+    implementation 'org.springframework.boot:spring-boot-starter-restclient'
 //    implementation 'org.springframework.boot:spring-boot-starter-web'
 //    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
