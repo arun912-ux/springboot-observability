@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.4'
+    id 'org.springframework.boot' version '4.0.5'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 ext {
@@ -42,32 +42,42 @@ dependencyManagement {
 
 dependencies {
 
+    // web
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.springframework.boot:spring-boot-starter-webclient'
     implementation 'org.springframework.boot:spring-boot-starter-restclient'
 
+    // db and cache
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
     implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-reactor-resilience4j'
     runtimeOnly 'org.postgresql:postgresql'
-    implementation 'com.github.ben-manes.caffeine:caffeine:3.2.3'
+    implementation 'com.github.ben-manes.caffeine:caffeine:3.2.4'
 
-
+    // actuator and OTEL
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-opentelemetry'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
-    implementation 'net.ttddyy.observation:datasource-micrometer-spring-boot:2.2.0'
+    implementation 'net.ttddyy.observation:datasource-micrometer-spring-boot:2.2.1'
     implementation 'io.opentelemetry.instrumentation:opentelemetry-logback-appender-1.0:2.26.0-alpha'
+
+    // swagger
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3'
+
+    // rabbit-mq
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
 
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.springframework.boot:spring-boot-starter-jackson'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'org.springframework.boot:spring-boot-starter-amqp-test'
 
 
 }

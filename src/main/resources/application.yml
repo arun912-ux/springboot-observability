@@ -9,6 +9,9 @@ management:
   endpoint:
     health:
       show-details: always
+  health:
+    db:
+      enabled: true
 
   observations:
     annotations:
@@ -115,11 +118,11 @@ spring:
 # redis
   data:
     redis:
-      host: valkey-aiven-256d391a-duoley-9bac.c.aivencloud.com
+      host: redis://enabling-molly-40932.upstash.io:6379
       port: 24981
-      password: ${VALKEY_PASSWORD:AVNS_ICVlD_N8_jJ23duh0Ip}
+      password: ${REDIS_PASSWORD}
       username: default
-      client-type: lettuce
+      client-type: Lettuce
       database: 0
       ssl:
         enabled: true
@@ -128,11 +131,14 @@ spring:
 
   # postgres
   datasource:
-    username: avnadmin
-    password: AVNS__La1tM4jSbXtICSBYvs
-    url: 'jdbc:postgresql://pg-aiven-35baaf7f-duoley-9bac.c.aivencloud.com:24980/defaultdb?sslmode=require'
+    username: ${POSTGRES_USERNAME}
+    password: ${POSTGRES_PASSWORD}
+    url: jdbc:postgresql://ep-little-darkness-ao35vpop-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb
     driver-class-name: org.postgresql.Driver
 
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
 
   jpa:
     hibernate:
@@ -151,28 +157,28 @@ spring:
 
 
 
-#  rabbitmq:
-#    host: 192.168.1.71
-#    port: 5672
-#    username: root
-#    password: root123
-#
-#    # Optional: connection settings
-#    virtual-host: /
-#    connection-timeout: 60000
-#
-#    # Publisher confirms & returns (useful for reliability)
-#    publisher-confirm-type: correlated
-#    publisher-returns: true
-#
-#    # Listener container config
-#    listener:
-#      simple:
-#        acknowledge-mode: auto
-#        concurrency: 3
-#        max-concurrency: 10
-#      direct:
-#        acknowledge-mode: manual
+  rabbitmq:
+    host: coral-01.rmq3.cloudamqp.com
+    port: 5672
+    username: ${RABBITMQ_USERNAME}
+    password: ${RABBITMQ_PASSWORD}
+
+    # Optional: connection settings
+    virtual-host: /
+    connection-timeout: 60000
+
+    # Publisher confirms & returns (useful for reliability)
+    publisher-confirm-type: correlated
+    publisher-returns: true
+
+    # Listener container config
+    listener:
+      simple:
+        acknowledge-mode: auto
+        concurrency: 3
+        max-concurrency: 10
+      direct:
+        acknowledge-mode: manual
 
 
 
@@ -203,4 +209,22 @@ resilience4j:
         failure-rate-threshold: 4
         enable-exponential-backoff: true
         exponential-backoff-multiplier: 2
+
+
+
+springdoc:
+  api-docs: # Custom API documentation endpoints
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    persist-authorization: true
+    with-credentials: true
+    oauth:
+      client-id:
+      client-secret:
+      realm:
+      app-name:
+
+
+
 

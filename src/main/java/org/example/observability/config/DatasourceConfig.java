@@ -1,7 +1,7 @@
 package org.example.observability.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
+import org.springframework.boot.jdbc.autoconfigure.DataSourceProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,27 +10,15 @@ import javax.sql.DataSource;
 @Configuration
 public class DatasourceConfig {
 
-    @Value("${spring.datasource.username}")
-    private String username;
 
-    @Value("${spring.datasource.password}")
-    private String password;
-
-    @Value("${spring.datasource.url}")
-    private String url;
-
-    @Value("${spring.datasource.driver-class-name}")
-    private String driverClassName;
-
-
-    @Bean
-    public DataSource dataSource() {
-        return DataSourceBuilder.create()
-                .username(username)
-                .password(password)
-                .url(url)
-                .driverClassName(driverClassName)
-                .build();
-    }
+//    @Bean
+//    public DataSource dataSource(DataSourceProperties dataSourceProperties) {
+//        return DataSourceBuilder.create()
+//                .url(dataSourceProperties.getUrl())
+//                .username(dataSourceProperties.getUsername())
+//                .password(dataSourceProperties.getPassword())
+//                .driverClassName(dataSourceProperties.getDriverClassName())
+//                .build();
+//    }
 
 }

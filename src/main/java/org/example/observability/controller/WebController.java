@@ -2,6 +2,8 @@ package org.example.observability.controller;
 
 import io.micrometer.observation.annotation.Observed;
 import io.opentelemetry.api.trace.Span;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.example.observability.repository.WeatherEntity;
 import org.example.observability.service.WeatherService;
@@ -19,6 +21,7 @@ public class WebController {
     public WebController(WeatherService weatherService) {
         this.weatherService = weatherService;
     }
+
 
     @GetMapping
     public ResponseEntity<?> index() {
