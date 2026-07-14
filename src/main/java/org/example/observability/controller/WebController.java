@@ -2,6 +2,7 @@ package org.example.observability.controller;
 
 import io.micrometer.observation.annotation.Observed;
 import io.opentelemetry.api.trace.Span;
+import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,10 @@ public class WebController {
         this.weatherService = weatherService;
     }
 
-
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "200 description", content = @Content(mediaType = "application/json")),
+        @ApiResponse(responseCode = "403", description = "")
+    })
     @GetMapping
     public ResponseEntity<?> index() {
         return ResponseEntity.ok().body("Hello World");
