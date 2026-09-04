@@ -1,12 +1,12 @@
 package org.example.observability;
 
-import org.example.observability.controller.WebController;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.resilience.annotation.EnableResilientMethods;
 
 @EnableCaching
+@EnableResilientMethods
 @SpringBootApplication
 public class SpringObservabilityApplication {
 

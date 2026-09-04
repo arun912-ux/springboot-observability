@@ -38,7 +38,7 @@ public class CacheConfig {
     public RedisCacheConfiguration redisCacheConfiguration() {
         return RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(1))
-                .enableTimeToIdle()
+                .enableTimeToIdle()             // Resets TTL back to 1 min every time the key is read
                 .disableCachingNullValues()
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()))
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.json()));
@@ -46,7 +46,7 @@ public class CacheConfig {
 
     private Caffeine<Object, Object> caffeine() {
         return Caffeine.newBuilder()
-                .expireAfterWrite(Duration.ofSeconds(10))
+                .expireAfterWrite(Duration.ofSeconds(60))
                 .maximumSize(10)
                 .recordStats();
     }

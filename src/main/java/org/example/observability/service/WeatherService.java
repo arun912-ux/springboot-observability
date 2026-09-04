@@ -17,6 +17,8 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 @Slf4j
@@ -51,6 +53,12 @@ public class WeatherService {
             weatherEntity = weather1.get(0);
         }
         log.info("Weather for city {} : weather : {}", city, weatherEntity);
+
+        ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
+        executorService.submit(() -> { return "return"; });
+        executorService.execute(() -> { });
+        executorService.close();
+
         return weatherEntity;
     }
 

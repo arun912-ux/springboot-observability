@@ -5,7 +5,9 @@ import io.micrometer.tracing.annotation.NewSpan;
 import io.opentelemetry.api.trace.Span;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.MediaType;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -25,6 +27,12 @@ public class WeatherClient {
 
     // https://api.openweathermap.org/data/2.5/weather?q=city&appid=0c3c357cbb2ceacfc2544131a21c4cdd&units=metric
 
+    @Retryable(
+            value = DataAccessException.class,
+            delay = 1500L,
+            maxRetries = 4L,
+            multiplier = 2L
+    )
     @CircuitBreaker(name = "openWeatherMap", fallbackMethod = "fallback")
     @NewSpan(value = "WeatherClient.getWeather")
     public String getWeather(String city) {
