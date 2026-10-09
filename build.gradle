@@ -90,22 +90,59 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
     testImplementation 'io.projectreactor:reactor-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'org.springframework.boot:spring-boot-starter-amqp-test'
+
+    // testcontainers
+    testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
+    testImplementation 'org.springframework.boot:spring-boot-testcontainers'
+    testImplementation 'org.testcontainers:testcontainers-vault'
+    testImplementation 'org.testcontainers:testcontainers-postgresql'
+//    testImplementation 'org.testcontainers:testcontainers-kafka'
 
 
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+//    excludes ["org.example.observability.controller.WebControllerTest*"]
 }
 
-
+// integration tests
 sourceSets {
-    main {
-        resources {
-            srcDirs = ['src/main/resources']
+    integrationTest {
+        java {
+            srcDir('src/integrationTest/java')
         }
+        resources {
+            srcDir('src/integrationTest/resources')
+        }
+        compileClasspath += main.output + test.output
+        runtimeClasspath += main.output + test.output
     }
 }
+
+// Share dependencies from main and test configurations
+configurations {
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+tasks.register('integrationTest', Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+
+    testLogging {
+        events 'failed'
+    }
+
+    useJUnitPlatform()
+    shouldRunAfter test
+}
+
+check.dependsOn integrationTest

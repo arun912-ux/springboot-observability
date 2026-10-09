@@ -17,8 +17,8 @@ public class HashiCorpConfig {
     private final String username;
     private final Environment environment;
 
-    public HashiCorpConfig(@Value("${test.db.password}") String password,
-                           @Value("${test.db.username}") String username,
+    public HashiCorpConfig(@Value("${db.password}") String password,
+                           @Value("${db.username}") String username,
                            Environment environment) {
         this.password = password;
         this.username = username;

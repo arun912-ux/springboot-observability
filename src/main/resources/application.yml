@@ -147,7 +147,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate      # for development, use 'validate' or 'none' for production
+      ddl-auto: validate      # 'create-drop | update' for development, use 'validate' or 'none' for production
     show-sql: true           # optional: shows SQL in logs
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
@@ -226,7 +226,7 @@ spring:
       kv:
         enabled: true
         backend: secret
-        application-name: test-secret
+        application-name: test
 
 
 
