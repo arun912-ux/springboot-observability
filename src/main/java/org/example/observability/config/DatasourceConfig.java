@@ -10,6 +10,11 @@ import javax.sql.DataSource;
 @Configuration
 public class DatasourceConfig {
 
+    private HashiCorpConfig hashiCorpConfig;
+
+    public DatasourceConfig(HashiCorpConfig hashiCorpConfig) {
+        this.hashiCorpConfig = hashiCorpConfig;
+    }
 
 //    @Bean
 //    public DataSource dataSource(DataSourceProperties dataSourceProperties) {

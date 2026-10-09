@@ -122,7 +122,7 @@ spring:
 # redis
   data:
     redis:
-      host: enabling-molly-40932.upstash.io
+      host: humorous-wombat-144342.upstash.io
       port: 6379
       password: ${REDIS_PASSWORD}
       username: default
@@ -137,12 +137,13 @@ spring:
   datasource:
     username: ${POSTGRES_USERNAME}
     password: ${POSTGRES_PASSWORD}
-    url: jdbc:postgresql://ep-little-darkness-ao35vpop-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb
+#    url: jdbc:postgresql://ep-little-darkness-ao35vpop-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb
+    url: jdbc:postgresql://ep-little-darkness-ao35vpop-pooler.c-2.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require
     driver-class-name: org.postgresql.Driver
 
     hikari:
-      maximum-pool-size: 10
-      minimum-idle: 5
+      driver-class-name: org.postgresql.Driver
+
 
   jpa:
     hibernate:
@@ -212,6 +213,22 @@ spring:
             token-uri: https://moweja-dev.eu.auth0.com/oauth/token
 
 
+# HASHICORP-VAULT
+  config:
+    import: "vault://"
+  cloud:
+    vault:
+      host: localhost
+      port: 8200
+      scheme: http
+      authentication: token
+      token: root
+      kv:
+        enabled: true
+        backend: secret
+        application-name: test-secret
+
+
 
 weather:
   apikey: ${OPEN_WEATHER_API_KEY:0c3c357cbb2ceacfc2544131a21c4cdd}
@@ -254,6 +271,7 @@ springdoc:
       client-secret:
       realm:
       app-name:
+
 
 
 

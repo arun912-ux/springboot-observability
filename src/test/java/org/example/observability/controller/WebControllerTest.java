@@ -26,8 +26,9 @@ class WebControllerTest {
 
     @Mock
     MockMvc mockMvc;
-    @Spy
-    MockMvc mockMvc2;
+
+//    @Spy
+//    MockMvc mockMvc2;
 
     @BeforeEach
     public void setup() {

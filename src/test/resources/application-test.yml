@@ -1,0 +1,32 @@
+spring:
+
+  rabbitmq:
+    listener:
+      simple:
+        default-requeue-rejected: false
+
+
+
+
+#  # HASHICORP-VAULT
+#  config:
+#    import: "vault://"
+#  cloud:
+#    vault:
+#      host: localhost
+#      port: 8200
+#      scheme: http
+#      authentication: token
+#      token: root
+#      kv:
+#        enabled: true
+#        backend: secret
+#        application-name: test-secret
+#
+
+
+#  datasource:
+#    url: ${DATABASE_URL}
+#    username: ${POSTGRES_USERNAME}
+#    password: ${POSTGRES_PASSWORD}
+#    driver-class-name: org.postgresql.Driver

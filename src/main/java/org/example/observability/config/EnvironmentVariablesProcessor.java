@@ -7,6 +7,8 @@ import org.springframework.boot.EnvironmentPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.ClassPathResource;
@@ -19,6 +21,7 @@ import java.util.List;
 
 @Slf4j
 @Configuration
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class EnvironmentVariablesProcessor implements EnvironmentPostProcessor {
     /**
      * Post-process the given {@code environment}.
@@ -39,6 +42,8 @@ public class EnvironmentVariablesProcessor implements EnvironmentPostProcessor {
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
         Resource resource = new ClassPathResource("observability.yaml");
         List<PropertySource<?>> propertySources = null;
+
+        System.out.println("Inside EnvironmentVariablesProcessor");
 
         try {
             propertySources = yamlLoader.load("observability.yaml", resource);

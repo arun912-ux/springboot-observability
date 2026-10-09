@@ -26,6 +26,7 @@ public class CacheConfig {
         RedisCacheManager redisCacheManager = RedisCacheManager
                 .builder(redisConnectionFactory)
                 .cacheDefaults(redisCacheConfiguration)
+                .enableStatistics()
                 .build();
         RedisCacheManager.RedisCacheManagerBuilder redisCacheManagerBuilder = RedisCacheManager.RedisCacheManagerBuilder
                 .fromConnectionFactory(redisConnectionFactory)
@@ -44,6 +45,10 @@ public class CacheConfig {
                 .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.json()));
     }
 
+
+
+
+
     private Caffeine<Object, Object> caffeine() {
         return Caffeine.newBuilder()
                 .expireAfterWrite(Duration.ofSeconds(60))
@@ -58,6 +63,9 @@ public class CacheConfig {
         manager.setCaffeine(caffeine());
         return manager;
     }
+
+
+
 
     // Multiple Cache setup
     @Bean
