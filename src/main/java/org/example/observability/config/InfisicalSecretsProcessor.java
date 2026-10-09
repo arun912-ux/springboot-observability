@@ -9,8 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.EnvironmentPostProcessor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.logging.DeferredLog;
-import org.springframework.boot.logging.DeferredLogFactory;
-import org.springframework.boot.logging.DeferredLogs;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MapPropertySource;
@@ -24,13 +22,9 @@ import java.util.Map;
 public class InfisicalSecretsProcessor implements EnvironmentPostProcessor {
 
     @Value("INFISICAL_CLIENT_SECRET")
-    private String clientSecret = "64520eebb166b88aa224a17ddc20db74509eaec85ee70e6633db43169ea23417";
+    private String clientSecret;
     @Value("INFISICAL_CLIENT_ID")
-    private String clientId = "6b0cc602-ee6f-4de7-bc60-2b6489750dc8";
-
-    public InfisicalSecretsProcessor(DeferredLogFactory logFactory) {
-        logFactory.getLog(InfisicalSecretsProcessor.class).info("Inside EnvironmentVariablesProcessor constructor");
-    }
+    private String clientId;
 
 
     /**
