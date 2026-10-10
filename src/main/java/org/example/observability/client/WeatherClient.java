@@ -28,7 +28,7 @@ public class WeatherClient {
     // https://api.openweathermap.org/data/2.5/weather?q=city&appid=0c3c357cbb2ceacfc2544131a21c4cdd&units=metric
 
     @Retryable(
-            value = DataAccessException.class,
+            value = RuntimeException.class,
             delay = 1500L,
             maxRetries = 4L,
             multiplier = 2L
@@ -54,6 +54,7 @@ public class WeatherClient {
     }
 
     public String fallback(Throwable ex) {
+        log.error("WeatherClient failed to call OpenWeatherMap API. Fallback method called due to: {}", ex.getMessage());
         return ex.getMessage();
     }
 

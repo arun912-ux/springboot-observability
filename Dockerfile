@@ -36,7 +36,7 @@
 
 ## PIPELINES
 
-FROM eclipse-temurin:17-jdk-alpine AS BUILD
+FROM eclipse-temurin:21-jdk-alpine AS BUILD
 
 WORKDIR app
 
@@ -45,7 +45,7 @@ COPY . /app
 RUN ./gradlew clean build -x test
 
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR app
 

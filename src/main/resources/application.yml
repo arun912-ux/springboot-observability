@@ -229,6 +229,12 @@ spring:
         application-name: test
 
 
+# Virtual Threads
+  threads:
+    virtual:
+      enabled: true
+
+
 
 weather:
   apikey: ${OPEN_WEATHER_API_KEY:0c3c357cbb2ceacfc2544131a21c4cdd}
@@ -271,7 +277,6 @@ springdoc:
       client-secret:
       realm:
       app-name:
-
 
 
 

@@ -47,6 +47,7 @@ public class WeatherService {
         WeatherEntity weatherEntity;
         if (weather1 == null || weather1.isEmpty()) {
             weather = weatherClient.getWeather(city);
+            log.info(">> weather: {}", weather);
             weatherEntity = mapToEntity(weather, city);
             pgDbRepository.save(weatherEntity);
         } else {
@@ -55,7 +56,10 @@ public class WeatherService {
         log.info("Weather for city {} : weather : {}", city, weatherEntity);
 
         ExecutorService executorService = Executors.newVirtualThreadPerTaskExecutor();
-        executorService.submit(() -> { return "return"; });
+        executorService.submit(() -> {
+            String s = "return" + " - ";
+            s += 1;
+            return s; });
         executorService.execute(() -> { });
         executorService.close();
 

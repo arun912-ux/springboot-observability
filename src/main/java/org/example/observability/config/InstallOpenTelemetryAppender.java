@@ -6,6 +6,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
+/**
+ * This class is responsible for installing the OpenTelemetryAppender to enable OpenTelemetry logging.
+ * This is to expose the OpenTelemetryAppender to the logging framework so that it can be used to send logs to OpenTelemetry.
+ * The OpenTelemetryAppender is a logback appender that sends logs to OpenTelemetry.
+ *
+ * This is required by logback-spring.xml to enable OpenTelemetry logging.
+ */
+
 @Slf4j
 @Component
 class InstallOpenTelemetryAppender implements InitializingBean {

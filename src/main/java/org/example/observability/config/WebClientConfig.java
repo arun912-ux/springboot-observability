@@ -9,6 +9,14 @@ import org.springframework.security.oauth2.client.web.reactive.function.client.S
 @Configuration
 public class WebClientConfig {
 
+    /**
+     * Configures a WebClientCustomizer bean with OAuth2 support.
+     * This bean customizes the WebClient to include an OAuth2 filter function that manages authorized clients.
+     *
+     * @param oAuth2AuthorizedClientManager
+     * @return
+     */
+
     @Bean
     public WebClientCustomizer webClient(OAuth2AuthorizedClientManager oAuth2AuthorizedClientManager) {
         return webClientBuilder -> {
