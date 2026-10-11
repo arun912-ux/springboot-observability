@@ -26,13 +26,13 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase.Replace.NONE;
 
 //@DataJpaTest
-@SpringBootTest(classes = SpringObservabilityApplication.class)
 @Testcontainers
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @AutoConfigureTestDatabase(replace = NONE)
 @TestPropertySource(properties = {
-        "spring.jpa.hibernate.ddl-auto=create-drop"             // Forces Hibernate to build the schema for tests
+        "spring.jpa.hibernate.ddl-auto=create-drop"             // Forces Hibernate to build the schema for tests since Testcontainers are ephemeral with no pre-existing schema to validate against.
 })
+@SpringBootTest(classes = SpringObservabilityApplication.class)
 public class DBTestContainerIT {
 
     private static final Logger log = LoggerFactory.getLogger(DBTestContainerIT.class);
