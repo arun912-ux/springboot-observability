@@ -6,17 +6,20 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.annotation.security.PermitAll;
 import lombok.extern.slf4j.Slf4j;
 import org.example.observability.repository.WeatherEntity;
 import org.example.observability.service.WeatherService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@PermitAll
 public class WebController {
 
     private final WeatherService weatherService;
@@ -46,6 +49,7 @@ public class WebController {
         return "home";
     }
 
+    @PreAuthorize("hasAuthority('READ_WRITE')")
     @GetMapping("weather")
     public ResponseEntity<?> getWeather(@RequestParam(value = "city", required = true) String city) {
         log.debug("Got request to get weather for city {}", city);

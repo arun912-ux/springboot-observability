@@ -2,8 +2,7 @@ package org.example.observability.config;
 
 import org.springframework.boot.webclient.WebClientCustomizer;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
+//import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
 
 /**
  * Configuration for reactive and outbound {@link org.springframework.web.reactive.function.client.WebClient} instances.
@@ -36,16 +35,16 @@ public class WebClientConfig {
 
 
 //    @Bean
-    public WebClientCustomizer webClient(OAuth2AuthorizedClientManager oAuth2AuthorizedClientManager) {
-        return webClientBuilder -> {
-            ServletOAuth2AuthorizedClientExchangeFilterFunction filterFunction =
-                    new ServletOAuth2AuthorizedClientExchangeFilterFunction(oAuth2AuthorizedClientManager);
-
-            filterFunction.setDefaultClientRegistrationId("downstream-m2m");        // this should match the client registration id in your application.yml
-//            filterFunction.setDefaultOAuth2AuthorizedClient(true);                  // Automatically authorize requests with the default client
-            webClientBuilder.filter(filterFunction);
-
-        };
-    }
+//    public WebClientCustomizer webClient(OAuth2AuthorizedClientManager oAuth2AuthorizedClientManager) {
+//        return webClientBuilder -> {
+//            ServletOAuth2AuthorizedClientExchangeFilterFunction filterFunction =
+//                    new ServletOAuth2AuthorizedClientExchangeFilterFunction(oAuth2AuthorizedClientManager);
+//
+//            filterFunction.setDefaultClientRegistrationId("downstream-m2m");        // this should match the client registration id in your application.yml
+////            filterFunction.setDefaultOAuth2AuthorizedClient(true);                  // Automatically authorize requests with the default client
+//            webClientBuilder.filter(filterFunction);
+//
+//        };
+//    }
 
 }
