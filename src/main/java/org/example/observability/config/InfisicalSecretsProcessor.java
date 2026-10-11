@@ -16,6 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * {@link EnvironmentPostProcessor} implementation that fetches application secrets from Infisical
+ * during the early environment preparation phase before the Spring ApplicationContext is initialized.
+ * <p>
+ * Reads the {@code INFISICAL_CLIENT_ID} and {@code INFISICAL_CLIENT_SECRET} environment variables,
+ * connects to Infisical via Universal Auth, pulls configured secrets for the project and environment,
+ * and adds them with highest precedence to Spring's {@link ConfigurableEnvironment} property sources.
+ */
 public class InfisicalSecretsProcessor implements EnvironmentPostProcessor {
 
 
@@ -27,10 +35,15 @@ public class InfisicalSecretsProcessor implements EnvironmentPostProcessor {
     DeferredLog deferredLog = new DeferredLog();
 
     /**
-     * Post-process the given {@code environment}.
+     * Post-processes the Spring environment prior to application context refresh.
+     * <p>
+     * Extracts Infisical client credentials from the system environment, validates their presence,
+     * calls {@link #getSecretMap(String, String, String, String)} to query Infisical, and registers
+     * the returned secrets as a {@link MapPropertySource} named {@code "infisical_secrets"}.
      *
-     * @param environment the environment to post-process
-     * @param application the application to which the environment belongs
+     * @param environment the {@link ConfigurableEnvironment} being prepared
+     * @param application the {@link SpringApplication} instance to which the environment belongs
+     * @throws RuntimeException if credentials are blank or if retrieval from Infisical fails
      */
     @Override
     public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
@@ -54,6 +67,16 @@ public class InfisicalSecretsProcessor implements EnvironmentPostProcessor {
     }
 
 
+    /**
+     * Authenticates with Infisical via Universal Auth and retrieves secret key-value pairs.
+     *
+     * @param clientId     the Infisical Machine Identity Client ID
+     * @param clientSecret the Infisical Machine Identity Client Secret
+     * @param projectId    the Infisical Project / Workspace UUID
+     * @param envSlug      the environment slug (e.g., "dev", "prod", "staging")
+     * @return a {@link Map} of secret names to secret values
+     * @throws RuntimeException wrapping {@link InfisicalException} if authentication or fetching fails
+     */
     public Map<String, Object> getSecretMap(String clientId, String clientSecret, String projectId, String envSlug) {
 
         SdkConfig sdkConfig = new SdkConfig.Builder().build();

@@ -20,10 +20,21 @@ class InstallOpenTelemetryAppender implements InitializingBean {
 
     private final OpenTelemetry openTelemetry;
 
+    /**
+     * Constructs the appender installer with the auto-configured {@link OpenTelemetry} instance.
+     *
+     * @param openTelemetry the OpenTelemetry SDK instance containing active tracer, meter, and logger providers
+     */
     InstallOpenTelemetryAppender(OpenTelemetry openTelemetry) {
         this.openTelemetry = openTelemetry;
     }
 
+    /**
+     * Invoked by the Spring container after all bean properties have been set.
+     * Hooks the auto-configured {@link OpenTelemetry} instance into the Logback
+     * {@link OpenTelemetryAppender} so that all application log events capture
+     * active trace IDs and span IDs and are forwarded via OTLP.
+     */
     @Override
     public void afterPropertiesSet() {
         log.info("OpenTelemetryAppender initialized : {}", openTelemetry);

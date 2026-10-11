@@ -63,6 +63,14 @@ public class WeatherService {
         executorService.execute(() -> { });
         executorService.close();
 
+        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(5);
+        fixedThreadPool.submit(() -> {
+            String s = "return" + " - ";
+            s += 1;
+            return s; });
+        fixedThreadPool.submit(() -> { });
+        fixedThreadPool.execute(() -> {});
+        fixedThreadPool.close();
         return weatherEntity;
     }
 

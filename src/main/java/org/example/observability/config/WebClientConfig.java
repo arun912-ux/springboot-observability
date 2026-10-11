@@ -6,23 +6,32 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.web.reactive.function.client.ServletOAuth2AuthorizedClientExchangeFilterFunction;
 
+/**
+ * Configuration for reactive and outbound {@link org.springframework.web.reactive.function.client.WebClient} instances.
+ * <p>
+ * Provides customizers that inject Spring Security OAuth2 M2M (Machine-to-Machine)
+ * token exchange filters so that outbound HTTP requests automatically attach valid Bearer tokens.
+ */
 @Configuration
 public class WebClientConfig {
 
     /**
-     * Configures a WebClientCustomizer bean with OAuth2 support.
-     * This bean customizes the WebClient to include an OAuth2 filter function that manages authorized clients.
+     * Configures a {@link WebClientCustomizer} that applies an OAuth2 exchange filter to all auto-configured
+     * {@link org.springframework.web.reactive.function.client.WebClient.Builder} instances.
+     * <p>
+     * Associates the {@link ServletOAuth2AuthorizedClientExchangeFilterFunction} with the default
+     * client registration {@code "downstream-m2m"} configured in {@code application.yml},
+     * ensuring authorized token propagation during outbound service-to-service communication.
      *
-     * @param oAuth2AuthorizedClientManager
-     * @return
+     * @param oAuth2AuthorizedClientManager the Spring Security OAuth2 authorized client manager
+     * @return a {@link WebClientCustomizer} that registers the OAuth2 filter with WebClient builders
      */
-
     @Bean
     public WebClientCustomizer webClient(OAuth2AuthorizedClientManager oAuth2AuthorizedClientManager) {
         return webClientBuilder -> {
             ServletOAuth2AuthorizedClientExchangeFilterFunction filterFunction =
                     new ServletOAuth2AuthorizedClientExchangeFilterFunction(oAuth2AuthorizedClientManager);
-            filterFunction.setDefaultClientRegistrationId("client-registration-name");
+            filterFunction.setDefaultClientRegistrationId("downstream-m2m");        // this should match the client registration id in your application.yml
             webClientBuilder.filter(filterFunction);
 
         };
