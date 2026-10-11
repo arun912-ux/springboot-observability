@@ -1,0 +1,28 @@
+#spring:
+#
+#  security:
+#    oauth2:
+#      # INBOUND: Validates tokens coming from clients calling this service
+#      #      resourceserver:
+#      #        jwt:
+#      #          issuer-uri: https://moweja-dev.eu.auth0.com
+#
+#      # OUTBOUND: Handles M2M tokens for calls this service makes to downstream APIs
+#      client:
+#        registration:
+#          downstream-m2m:
+#            provider: auth0
+#            client-id: ${M2M_CLIENT_ID}
+#            client-secret: ${M2M_CLIENT_SECRET}
+#            authorization-grant-type: client_credentials
+#            audience: "https://localhost.sh"
+#            scope: read,write
+#        #            client-name:
+#        #            redirect-uri:
+#        #            client-authentication-method:
+#        provider:
+#          auth0:
+#            token-uri: https://moweja-dev.eu.auth0.com/oauth/token
+#
+#
+#

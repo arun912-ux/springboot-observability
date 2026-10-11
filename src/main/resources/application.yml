@@ -196,6 +196,7 @@ spring:
 #        jwt:
 #          issuer-uri: https://moweja-dev.eu.auth0.com
 
+
       # OUTBOUND: Handles M2M tokens for calls this service makes to downstream APIs
       client:
         registration:
@@ -204,13 +205,17 @@ spring:
             client-id: ${M2M_CLIENT_ID}
             client-secret: ${M2M_CLIENT_SECRET}
             authorization-grant-type: client_credentials
-            scope: read,write
+            scope: READ_ONLY,READ_WRITE,read:all
+            audience: "https://localhost.sh"
 #            client-name:
 #            redirect-uri:
 #            client-authentication-method:
         provider:
           auth0:
             token-uri: https://moweja-dev.eu.auth0.com/oauth/token
+            issuer-uri: https://moweja-dev.eu.auth0.com/
+            jwk-set-uri: https://moweja-dev.eu.auth0.com/.well-known/jwks.json
+            
 
 
 # HASHICORP-VAULT
@@ -277,6 +282,20 @@ springdoc:
       client-secret:
       realm:
       app-name:
+
+
+
+
+
+  #okta:
+  #  oauth2:
+  #    audience: https://localhost.sh
+  #    issuer: https://moweja-dev.eu.auth0.com/
+  #    client-id: ${M2M_CLIENT_ID}
+  #    client-secret: ${M2M_CLIENT_SECRET}
+  #    scopes: read:all READ_ONLY READ_WRITE
+  #    authorities-claim-name: ${JWT_CLAIMS_NAMESPACE:permissions}
+  #
 
 
 
