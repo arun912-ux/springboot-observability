@@ -12,6 +12,8 @@ management:
   health:
     db:
       enabled: true
+    mongodb:
+      enabled: true
 
   observations:
     annotations:
@@ -147,11 +149,20 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate      # 'create-drop | update' for development, use 'validate' or 'none' for production
+      ddl-auto: update # validate      # 'create-drop | update' for development, use 'validate' or 'none' for production
     show-sql: true           # optional: shows SQL in logs
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     properties:
       hibernate.format_sql: true
+
+
+
+
+# MONGO DB
+  mongodb:
+    database: observabilitydb
+    uri: ${MONGO_URI}
+    protocol: mongodb+srv
 
 
 
@@ -241,6 +252,8 @@ spring:
 
 
 
+
+
 weather:
   apikey: ${OPEN_WEATHER_API_KEY:0c3c357cbb2ceacfc2544131a21c4cdd}
 
@@ -306,7 +319,6 @@ okta:
     scopes: READ_WRITE
     authorities-claim-name: permissions
     groups-claim: permissions
-
 
 
 

@@ -1,7 +1,8 @@
 import com.redis.testcontainers.RedisContainer;
 import org.example.observability.SpringObservabilityApplication;
+import org.example.observability.repository.MongoDBRepository;
 import org.example.observability.repository.PGDBRepository;
-import org.example.observability.repository.WeatherEntity;
+import org.example.observability.dto.WeatherEntity;
 import org.example.observability.service.WeatherService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -12,11 +13,11 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.mongodb.MongoDBContainer;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -44,6 +45,10 @@ public class DBTestContainerIT {
     @Autowired
     private PGDBRepository pgdbRepository;
 
+    @MockitoSpyBean
+    @Autowired
+    private MongoDBRepository mongoDBRepository;
+
     @Autowired
     private WeatherService weatherService;
 
@@ -55,6 +60,10 @@ public class DBTestContainerIT {
     @Container
     @ServiceConnection
     static RedisContainer redisContainer = new RedisContainer("redis:8");
+
+    @Container
+    @ServiceConnection
+    static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:8.0");
 
     @BeforeAll
     public static void setup() {
@@ -72,6 +81,7 @@ public class DBTestContainerIT {
 
         assertFalse(cincinnati.getTemperature().isBlank());
         verify(pgdbRepository, times(1)).save(any());
+        verify(mongoDBRepository, times(1)).save(any());
     }
 
 

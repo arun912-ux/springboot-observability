@@ -55,6 +55,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-cache'
 
+    // MongoDB
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.boot:spring-boot-starter-mongodb'
+
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-resource-server'
 //    implementation 'org.springframework.boot:spring-boot-starter-security-oauth2-client'
@@ -108,6 +112,8 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers-vault'
     testImplementation 'org.testcontainers:testcontainers-postgresql'
     testImplementation 'com.redis:testcontainers-redis'
+    testImplementation 'org.testcontainers:testcontainers-mongodb'
+
 //    testImplementation 'org.testcontainers:testcontainers-kafka'
 
     // mockito

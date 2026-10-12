@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.annotation.security.PermitAll;
 import lombok.extern.slf4j.Slf4j;
-import org.example.observability.repository.WeatherEntity;
+import org.example.observability.dto.WeatherEntity;
 import org.example.observability.service.WeatherService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
