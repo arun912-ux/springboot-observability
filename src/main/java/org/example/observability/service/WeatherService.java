@@ -12,8 +12,13 @@ import org.example.observability.dto.WeatherEntity;
 import org.example.observability.dto.WeatherMongo;
 import org.example.observability.repository.MongoDBRepository;
 import org.example.observability.repository.PGDBRepository;
+import org.example.observability.repository.WeatherProjection;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.JsonNode;
@@ -43,7 +48,7 @@ public class WeatherService {
     }
 
     @Timed(value = "weatherservice.getweather", histogram = true)
-    @Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
     @Cacheable(value = "city-weather", key = "#city", cacheManager = "cacheManager")
     @Observed(name = "weather-service.get-weather-for-city")
     public WeatherEntity getWeatherForCity(String city) {
@@ -87,6 +92,13 @@ public class WeatherService {
         fixedThreadPool.execute(() -> {
         });
         fixedThreadPool.close();
+
+        PageRequest pageRequest = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "timestamp"));
+        Page<WeatherMongo> mongoPage = mongoDBRepository.findAll(pageRequest);
+        log.info("Weather for city {} : mongoPage : {}", city, mongoPage.getContent());
+
+        List<WeatherProjection> weatherProjectionList = pgDbRepository.findByCity(city);
+        log.info("Weather for city {} : weatherProjectionList : {}", city, weatherProjectionList.getFirst().customToString());
         return weatherEntity;
     }
 
