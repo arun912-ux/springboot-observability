@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.concurrent.ExecutionException;
+
 @Slf4j
 @RestController
 @PermitAll
@@ -51,7 +53,7 @@ public class WebController {
 
     @PreAuthorize("hasAuthority('READ_WRITE')")
     @GetMapping("weather")
-    public ResponseEntity<?> getWeather(@RequestParam(value = "city", required = true) String city) {
+    public ResponseEntity<?> getWeather(@RequestParam(value = "city", required = true) String city) throws ExecutionException, InterruptedException {
         log.debug("Got request to get weather for city {}", city);
 
         Span.current().setAttribute("42-city", city);

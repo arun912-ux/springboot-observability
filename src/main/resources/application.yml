@@ -284,12 +284,30 @@ server:
 
 
 resilience4j:
+
+  timelimiter:
+    instances:
+      openWeatherMap:
+        timeout-duration: 2s
+        cancel-running-future: true
+    metrics:
+      enabled: true
+
   circuitbreaker:
     instances:
       openWeatherMap:
         failure-rate-threshold: 4
         enable-exponential-backoff: true
         exponential-backoff-multiplier: 2
+    metrics:
+      enabled: true
+
+  retry:
+    instances:
+      openWeatherMap:
+        enable-exponential-backoff: true
+        exponential-backoff-multiplier: 2
+        fail-after-max-attempts: true
 
 
 

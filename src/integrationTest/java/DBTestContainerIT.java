@@ -20,6 +20,12 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.mongodb.MongoDBContainer;
 import org.testcontainers.postgresql.PostgreSQLContainer;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,11 +48,11 @@ public class DBTestContainerIT {
 
 
     @MockitoSpyBean
-    @Autowired
+//    @Autowired
     private PGDBRepository pgdbRepository;
 
     @MockitoSpyBean
-    @Autowired
+//    @Autowired
     private MongoDBRepository mongoDBRepository;
 
     @Autowired
@@ -71,7 +77,7 @@ public class DBTestContainerIT {
 
 
     @Test
-    public void shouldTestPostgresContainer() {
+    public void shouldTestPostgresContainer() throws ExecutionException, InterruptedException {
         assertTrue(postgreSQLContainer.isCreated(), "");
         String testQueryString = postgreSQLContainer.getTestQueryString();
         log.info("testQueryString : {}", testQueryString);
@@ -84,6 +90,20 @@ public class DBTestContainerIT {
         verify(mongoDBRepository, times(1)).save(any());
     }
 
+
+    @Test
+    public void someCollectionsTest() {
+        List<Integer> list = Arrays.asList(1, 3, 0, 4, 2, 5, 8, 6, 11, 7, 13, 9, 10, 12);
+        log.info("95 list : {}", list);
+        Collections.reverse(list);
+        log.info("97 reverse list : {}", list);
+        Collections.sort(list, Integer::compare);
+        log.info("99 sorted list : {}", list);
+        Collections.sort(list, Collections.reverseOrder());
+        log.info("101 reverse sorted list : {}", list);
+        Collections.sort(list, Comparator.naturalOrder());
+        log.info("104 natural order sorted list : {}", list);
+    }
 
 //    @Container
 //    @ServiceConnection

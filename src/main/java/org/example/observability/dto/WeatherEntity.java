@@ -13,6 +13,7 @@ import jakarta.persistence.Version;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 
 @Data
@@ -49,7 +50,7 @@ import lombok.NoArgsConstructor;
                 query = "SELECT id, city, weather, temperature, icon FROM weather_entity WHERE city = :city"
         )
 })
-
+@DynamicUpdate
 @Entity
 public class WeatherEntity {
 

@@ -14,8 +14,8 @@ import org.example.observability.repository.MongoDBRepository;
 import org.example.observability.repository.PGDBRepository;
 import org.example.observability.repository.WeatherProjection;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -26,6 +26,8 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -51,7 +53,7 @@ public class WeatherService {
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
     @Cacheable(value = "city-weather", key = "#city", cacheManager = "cacheManager")
     @Observed(name = "weather-service.get-weather-for-city")
-    public WeatherEntity getWeatherForCity(String city) {
+    public WeatherEntity getWeatherForCity(String city) throws ExecutionException, InterruptedException {
         log.info("Getting weather for city {}", city);
         Span.current().setAttribute("24-city", city);
         List<WeatherEntity> weather1 = pgDbRepository.findByCityOrderByTimestampDesc(city);
@@ -93,8 +95,21 @@ public class WeatherService {
         });
         fixedThreadPool.close();
 
+        // CompletableFuture examples
+
+        CompletableFuture<String> supplyAsync = CompletableFuture.supplyAsync(() -> "Supply Async");
+        CompletableFuture<String> supplyAsync2 = CompletableFuture.supplyAsync(() -> "Supply Async 2");
+        supplyAsync.thenCombine(supplyAsync2, (s1, s2) -> s1 + s2);
+        supplyAsync2.join();
+        supplyAsync2.get();
+        supplyAsync2.thenApply(res -> res.toUpperCase()).thenAccept(res -> System.out.println(res));
+        supplyAsync.whenComplete((res, err) -> res.toLowerCase());
+        CompletableFuture<Void> runAsync = CompletableFuture.runAsync(() -> System.out.println("Run Async"));
+        runAsync.get();
+
+
         PageRequest pageRequest = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "timestamp"));
-        Page<WeatherMongo> mongoPage = mongoDBRepository.findAll(pageRequest);
+        Slice<WeatherMongo> mongoPage = mongoDBRepository.findAll(pageRequest);
         log.info("Weather for city {} : mongoPage : {}", city, mongoPage.getContent());
 
         List<WeatherProjection> weatherProjectionList = pgDbRepository.findByCity(city);

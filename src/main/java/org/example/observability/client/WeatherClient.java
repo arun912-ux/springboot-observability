@@ -1,6 +1,7 @@
 package org.example.observability.client;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.timelimiter.annotation.TimeLimiter;
 import io.micrometer.tracing.annotation.NewSpan;
 import io.opentelemetry.api.trace.Span;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,7 @@ public class WeatherClient {
             multiplier = 2L
     )
     @CircuitBreaker(name = "openWeatherMap", fallbackMethod = "fallback")
+    @TimeLimiter(name = "openWeatherMap", fallbackMethod = "fallback")
     @NewSpan(value = "WeatherClient.getWeather")
     public String getWeather(String city) {
         Span.current().setAttribute("29-city", city);
